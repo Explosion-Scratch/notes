@@ -1,0 +1,35 @@
+<h1>{{note.title}}</h1>
+<div id="stats"><span id="date"><span class="iconify" data-icon="ic:baseline-update" data-inline="false"></span> {{ formatDate note.dateCreated }} </span></div>
+<style>
+	.iconify, .iconify * {
+		color: #333 !important;
+	}
+</style>
+{{#if deleteBtn}}
+<div>
+  <form style="display: inline;"action="/notes/delete/{{note._id}}" method="POST" onsubmit="return confirm('Are you sure you want to delete this note?')">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="danger-btn" style="width: max-content">Delete note</button>
+  </form>
+	<button onclick='window.location.href="/notes/edit/{{note._id}}"' style="width: max-content"> Edit note</button> 
+	</div>
+{{/if}}
+<hr>
+<main>
+	{{#if note.body}}
+		{{{ note.body }}}
+	{{/if}}
+	{{#unless note.body}}
+		<i>Huh. No content.</i>
+	{{/unless}}
+</main>
+
+<br>
+<style>
+	main {
+  background: #0001;
+  padding: 40px;
+  border-radius: 10px;
+}</style>
+
+

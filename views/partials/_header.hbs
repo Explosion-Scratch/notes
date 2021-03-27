@@ -1,0 +1,79 @@
+<script>
+document.body.innerHTML = `<header>
+  <h1 id="logo">Notes</h1>
+  <nav>
+    <ul>
+      <li><a href="/dashboard">Home</a></li>
+      <li><a href="/dashboard">Notes</a></li>
+      <li><a href="/auth/logout">Login/logout</a></li>
+    </ul>
+  </nav>
+</header>${document.body.innerHTML}`
+</script>
+<style>
+	body {
+		font-family: sans-serif;
+	}
+
+	body,
+	h1,
+	ul {
+		margin: 0;
+		padding: 0;
+	}
+
+	header {
+		z-index: 10000;
+		align-items: center;
+		display: flex;
+	}
+
+	nav ul {
+		display: flex;
+		justify-content: space-around;
+	}
+
+	nav li {
+		list-style: none;
+	}
+	* {
+  	box-sizing: border-box;
+	}
+	header {
+		background: #eee;
+		padding: 20px;
+		position: fixed;
+		width: 100vw;
+		top: 0;
+		left: 0;
+		margin: none !important;
+	}
+
+	#logo {
+		flex: 1;
+	}
+	nav {
+		flex: 0.3;
+	}
+	header a {
+  text-decoration: none;
+}
+header li {
+  height: 100%;
+  border: 1px solid transparent;
+  transition: border-color .2s ease;
+  padding: 10px;
+  border-radius: 5px;
+}
+header li:hover {
+  border: 1px solid #ddd
+}
+header {
+  background: #fff1;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 4px #0002;
+}
+#logo {
+  padding-left: 2vw;
+}
+</style>

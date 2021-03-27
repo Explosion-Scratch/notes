@@ -1,0 +1,20 @@
+<script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/explosion-scratch/ripple@v0.0.0/ripple.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/styles/default.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script type="module">
+	import * as _$ from "https://unpkg.com/bijou.js";
+	_$.each(document.querySelectorAll("table"), (t) => {
+		_$.sortTable(t);
+	});
+	_$.each(document.querySelectorAll("button, header li"), (btn) => {
+		btn.setAttribute("data-ripple", "");
+		btn.setAttribute("data-event", "mousedown")
+		btn.setAttribute("data-time", 300);
+		btn.setAttribute("data-color", "lightseagreen");
+		btn.setAttribute("data-opacity", ".5");
+	})
+	_$.each(document.querySelectorAll(".danger-btn"), (b) => b.setAttribute("data-color", "#f66"));
+	ripple();
+</script>

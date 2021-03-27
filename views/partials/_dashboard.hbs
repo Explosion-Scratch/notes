@@ -1,0 +1,28 @@
+<h3>Hello {{name}}, here are your notes:</h3>
+<hr>
+<button style="width: fit-content; margin-bottom: 5px;" onclick='window.location.href="/notes/add"'><span class="iconify" data-icon="ant-design:plus-circle-outlined"></span>  Create a note</button>
+{{#if notes}}
+<table>
+        <tr>
+            <th>Title</th>
+            <th>Date</th>
+            <th></th>
+        </tr>
+    {{#each notes}}
+        <tr>
+            <td><a href="notes/view/{{_id}}">{{title}}</a></td>
+            <td>{{formatDate dateCreated}} </td>
+            <td>
+                <button onclick='window.location.href="/notes/edit/{{_id}}"'><span class="iconify" data-icon="clarity:edit-solid"></span>Edit</button>
+                <form onsubmit="return confirm('Are you sure you want to delete this note?')"action="/notes/delete/{{_id}}" method="POST" >
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit"><span class="iconify" data-icon="eva:trash-2-fill"></span>Delete</button> 
+                </form>
+             </td>
+        </tr>
+    {{/each}}
+</table>
+{{/if}}
+{{#unless notes}}
+<i style="width: 100%; display: block; text-align: center;">No notes yet! Go make one! =D</i>
+{{/unless}}
