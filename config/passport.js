@@ -36,7 +36,7 @@ module.exports = function (passport) {
       },
     ),
   );
-  passport.serializeUser((user, done) => {
+  passport.serializeUser(async (user, done) => {
 		try {
     	done(null, user.id);
 		} catch(e){

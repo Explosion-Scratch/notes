@@ -2,7 +2,7 @@ const express = require('express')
 const passport = require('passport')
 const router = express.Router()
 
-router.get('/github', passport.authenticate('github', { scope: ['profile'] }), (req, res) => {
+router.get('/github', passport.authenticate('github', { scope: ['profile'], failiureRedirect: "/"}), (req, res) => {
 	res.redirect('/dashboard')
 	return;
 })
