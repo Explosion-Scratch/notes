@@ -6,6 +6,11 @@ const NoteSchema = new Schema({
     type: String,
     required: true,
   },
+	views: {
+		type: Number,
+		required: false,
+		default: 0,
+	},
   body: {
     type: String,
     required: true,

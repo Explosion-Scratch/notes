@@ -29,9 +29,18 @@ router.get('/view/:id', async (req, res) => {
 			res.redirect("/dashboard");
 			return;
 		}
-		if (!note.isPublic || note.user != req.user.id){
-			res.redirect("/dashboard")
+		console.log(req.user, note.user)
+		if (!note.isPublic){
+			console.log("Note isn't public.")
+			if (req.user._id.toString() != note.user.toString()){
+				res.render("notes/read", {});
+				return;
+			}
 		}
+		await Note.findOneAndUpdate(
+			{ _id: req.params.id },
+			{views: (note.views || 0) + 1},
+		)
 		note.body = sanitizeHtml(converter.makeHtml(note.body));
 		note.body = deburr(note.body);
 		note.title = deburr(note.title);
@@ -39,10 +48,14 @@ router.get('/view/:id', async (req, res) => {
 		if (note.user == (req.user ? req.user.id : "Never gonna give you up, never gonna get this ID")){
 			deleteBtn = true;
 		}
-    res.render('notes/read', { note, deleteBtn: deleteBtn });
+    res.render('notes/read', { note, deleteBtn: deleteBtn, readingTime: readingTime(note.body) });
   } catch (err) {
     console.log(err);
   }
+	function readingTime(text) {
+			let rt = text.split(/\s+/).length / 233;
+			return `${Math.round(rt < 1 ? rt * 60 : rt)} ${rt < 1 ? "second" : "minute"}${Math.round(rt < 1 ? rt * 60 : rt) === 1 ? "" :"s"}`
+	}
 });
 router.get('/edit/:id', ensureAuth, async (req, res) => {
   try {
@@ -56,7 +69,6 @@ router.get('/edit/:id', ensureAuth, async (req, res) => {
     console.log(err);
   }
 });
-
 router.put('/:id', ensureAuth, async (req, res) => {
 	var note = await Note.findById(req.params.id).lean();
 	if (note.user != req.user.id){
@@ -102,4 +114,7 @@ router.delete('/delete/:id', ensureAuth, async (req, res) => {
     console.log(err);
   }
 });
+function type(e) {
+	return Object.prototype.toString.call(e).split(" ")[1].replace(/]$/, "");
+}
 module.exports = router;

@@ -2,10 +2,10 @@ const express = require('express')
 const passport = require('passport')
 const router = express.Router()
 
-router.get('/google', passport.authenticate('google', { scope: ['profile'] }))
+router.get('/github', passport.authenticate('github', { scope: ['profile'] }))
 
 //GET to dashboard
-router.get('/google/callback' , passport.authenticate('google',{ failureRedirect: '/'}),
+router.get('/github/callback' , passport.authenticate('github',{ failureRedirect: '/'}),
 (req,res)=>{
 	try{
     res.redirect('/dashboard')

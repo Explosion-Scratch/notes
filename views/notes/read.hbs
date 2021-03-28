@@ -1,81 +1,87 @@
-<h1>{{note.title}}</h1>
-<div id="stats"><span id="date"><span class="iconify"
-            data-icon="ic:baseline-update" data-inline="false"></span>
-        {{ formatDate note.dateCreated }} </span></div>
-<style>
-    .iconify,
-    .iconify * {
-        color: #333 !important;
-    }
-</style>
-<div>
-    {{#if deleteBtn}}
-        <form style="display: inline;"
-            action="/notes/delete/{{note._id}}" method="POST"
-            onsubmit="return confirm('Are you sure you want to delete this note?')">
-            <input type="hidden" name="_method" value="DELETE">
-            <button type="submit" class="danger-btn"
-                style="width: max-content">Delete note</button>
-        </form>
-        <button
-            onclick='window.location.href="/notes/edit/{{note._id}}"'
-            style="width: max-content"> Edit note</button>
-    {{/if}}
-    <button
-        onclick='confirm("Are you sure you want to report this note?") ? reportNote(): ""'>Report
-        this note</button>
-</div>
-<hr>
-<main>
-    {{#if note.body}}
-        {{{ note.body }}}
-    {{/if}}
-    {{#unless note.body}}
-        <i>Huh. No content.</i>
-    {{/unless}}
-</main>
-<script>
-    async function reportNote() {
-        let data = {
-            color: 0x00bbbb,
-            fields: [{
-                name: "Title",
-                value: document.querySelector(
-                        "h1:not(#logo)")
-                    .innerText || "No title -__-"
-            }, {name: "Link", value: window.location.href || "Someone is messing with stuff."},{
-                name: "Content",
-                value: await fetch(
-                    "https://apis.explosionscratc.repl.co/markdown", {
-                        method: "POST",
-                        body: JSON.stringify({
-                            to: "md",
-                            text: document
-                                .querySelector(
-                                    'main'
-                                )
-                                .innerHTML
-                        })
-                    }).then(res => res.json())
-            }]
-        }
-        console.log(data);
-        fetch("https://discord.com/api/webhooks/825471352542330900/TMmx-VujlK1cVxVbQ66dBzC-m5I_pbduWl_3anKuzy5LQKWS1qFs94e6L7g4dm3awhtR", {
-            method: "POST",
-            headers: {
-                "Content-type": 'application/json'
-            },
-            body: JSON.stringify({
-                embeds: [data]
-            })
-        })
-    }
-</script>
-<br>
-<style>
-    main {
-        background: #0001;
-        padding: 40px;
-        border-radius: 10px;
-    }
-</style>
+{{#if note}}
+	<h1>{{note.title}}</h1>
+	<div id="stats"><span id="date"><span class="iconify"
+							data-icon="ic:baseline-update" data-inline="false"></span>
+					{{ formatDate note.dateCreated }} </span><span id="views"><span class="iconify" data-icon="fe:eye"></span> {{note.views}}</span> <span id="readingTime"><span class="iconify" data-icon="bx:bx-time">{{note.readingTime}}</span></span></div>
+	<style>
+			.iconify,
+			.iconify * {
+					color: #333 !important;
+			}
+	</style>
+	<div>
+			{{#if deleteBtn}}
+					<form style="display: inline;"
+							action="/notes/delete/{{note._id}}" method="POST"
+							onsubmit="return confirm('Are you sure you want to delete this note?')">
+							<input type="hidden" name="_method" value="DELETE">
+							<button type="submit" class="danger-btn"
+									style="width: max-content">Delete note</button>
+					</form>
+					<button
+							onclick='window.location.href="/notes/edit/{{note._id}}"'
+							style="width: max-content"> Edit note</button>
+			{{/if}}
+			<button
+					onclick='confirm("Are you sure you want to report this note?") ? reportNote(): ""'>Report
+					this note</button>
+	</div>
+	<hr>
+	<main>
+			{{#if note.body}}
+					{{{ note.body }}}
+			{{/if}}
+			{{#unless note.body}}
+					<i>Huh. No content.</i>
+			{{/unless}}
+	</main>
+	<script>
+			async function reportNote() {
+					let data = {
+							color: 0x00bbbb,
+							fields: [{
+									name: "Title",
+									value: document.querySelector(
+													"h1:not(#logo)")
+											.innerText || "No title -__-"
+							}, {name: "Link", value: window.location.href || "Someone is messing with stuff."},{
+									name: "Content",
+									value: await fetch(
+											"https://apis.explosionscratc.repl.co/markdown", {
+													method: "POST",
+													body: JSON.stringify({
+															to: "md",
+															text: document
+																	.querySelector(
+																			'main'
+																	)
+																	.innerHTML
+													})
+											}).then(res => res.json())
+							}]
+					}
+					console.log(data);
+					fetch("https://discord.com/api/webhooks/825471352542330900/TMmx-VujlK1cVxVbQ66dBzC-m5I_pbduWl_3anKuzy5LQKWS1qFs94e6L7g4dm3awhtR", {
+							method: "POST",
+							headers: {
+									"Content-type": 'application/json'
+							},
+							body: JSON.stringify({
+									embeds: [data]
+							})
+					})
+			}
+	</script>
+	<br>
+	<style>
+			main {
+					background: #0001;
+					padding: 40px;
+					border-radius: 10px;
+			}
+	</style>
+{{/if}}
+{{#unless note}}
+	<h1>Whoops!</h1>
+	<p>That note either does not exist, or you don't have permission to view this note. To view this note it must be public, or you must own it, sorry! Better luck next time?</p>
+{{/unless}}

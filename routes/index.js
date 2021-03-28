@@ -9,11 +9,24 @@ router.get('/', ensureGuest, (req, res) => {
   });
 });
 router.get("/users/:id", async (req, res) => {
-	const user = await Users.find({firstName});
-	console.log(user)
-	res.json(user)
+	var user = await Users.findOne({displayName: req.params.id}).lean();
+	
+	let image = user.image
+	var notes = await Note.find({isPublic: true, displayName: req.params.id}).lean();
+	var showdown  = require('showdown');
+	const sanitizeHtml = require('sanitize-html');
+	const converter = new showdown.Converter();
+	converter.setFlavor('github');
+	notes.map(note => {
+		note.body = sanitizeHtml(converter.makeHtml(note.body));
+		note.body = deburr(note.body);
+		note.title = deburr(note.title);
+		return note;
+	})
+	res.render("profile", {user, notes, image})
 })
 router.get('/dashboard', ensureAuth, async (req, res) => {
+	console.log(req.user)
   try {
     var notes = await Note.find({ user: req.user.id }).lean();
 		notes = notes.reverse();

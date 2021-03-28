@@ -1,4 +1,4 @@
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GitHubStrategy = require('passport-github').Strategy;
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const User = require('../models/User');
@@ -7,20 +7,21 @@ dotenv.config();
 
 module.exports = function (passport) {
   passport.use(
-    new GoogleStrategy(
-      {
-        clientID: process.env.GOOGLE_ID,
-        clientSecret: process.env.GOOGLE_SECRET,
-        callbackURL: '/auth/google/callback',
-      },
-      async (accessToken, refreshToken, profile, done) => {
+    new GitHubStrategy({
+			clientID: process.env.GITHUB_CLIENT_ID,
+			clientSecret: process.env.GITHUB_CLIENT_SECRET,
+			callbackURL: "https://notes-1.explosionscratc.repl.co/auth/github/callback"
+		},
+				async (accessToken, refreshToken, profile, done) => {
+					console.log(profile);
         const newUser = {
           googleId: profile.id,
-          displayName: profile.displayName,
-          firstName: profile.name.givenName,
-          lastName: profile.name.familyName,
-          image: profile.photos[0].value,
+          displayName: profile.username,
+          firstName: profile.displayName,
+          image: profile._json.avatar_url,
+					bio: profile._json.bio
         };
+				console.log(newUser)
         try {
           let user = await User.findOne({ googleId: profile.id });
           if (user) {
