@@ -48,7 +48,7 @@ router.get('/view/:id', async (req, res) => {
 		if (note.user == (req.user ? req.user.id : "Never gonna give you up, never gonna get this ID")){
 			deleteBtn = true;
 		}
-    res.render('notes/read', { note, deleteBtn: deleteBtn, readingTime: readingTime(note.body) });
+    res.render('notes/read', { note, deleteBtn: deleteBtn, readTime: readingTime(note.body) });
   } catch (err) {
     console.log(err);
   }
