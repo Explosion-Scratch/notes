@@ -4,9 +4,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.1/highlight.min.js"></script>
 <script>hljs.highlightAll();</script>
 <script type="module">
-	import * as _$ from "https://unpkg.com/bijou.js";
+	import * as _$ from "https://cdnjs.cloudflare.com/ajax/libs/Bijou.js/7.4.0/bijou-min.js";
 	_$.each(document.querySelectorAll("table"), (t) => {
-		_$.sortTable(t);
+		_$.sortTable(t, (t) => t.getAttribute("data-date"));
 	});
 	_$.each(document.querySelectorAll("button, header li"), (btn) => {
 		btn.setAttribute("data-ripple", "");

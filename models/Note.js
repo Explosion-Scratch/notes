@@ -14,6 +14,10 @@ const NoteSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+	isPublic: {
+		type: Boolean,
+		default: false,
+	},
   user : {
     type: Schema.Types.ObjectId,
     ref : 'User'

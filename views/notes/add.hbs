@@ -1,6 +1,7 @@
 <div>
 	<h2>Create a note</h2>
     <form action="/notes/add" method="POST">
+		<label><input type="checkbox" name="isPublic"> Public</label>
     <input name="title" placeholder="Title" type="text" required>
     <br>
     <textarea name="body" placeholder="Note content" required></textarea>

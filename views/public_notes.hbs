@@ -1,0 +1,52 @@
+{{#if notes}}
+	{{#each notes}}
+		<div id="note">
+			<h1>{{title}} <span id="date">Created {{formatDate dateCreated}} • <a href="/notes/view/{{_id}}">Link</a></span></h1>
+			<hr>
+			<div id="note_body">{{{body}}}</div>
+		</div>
+	{{/each}}
+{{/if}}
+{{#unless notes}}
+	<hr>
+	<h1 style="text-align: center; font-size: 100px;">No public notes</h1>
+	<i style="width: 100%; display: block; text-align: center">No public notes... Yet! To make a note click "Create note" in dashboard, and if you want it to show up here for all to see check the "Public" checkbox! Thanks for using Notes!</i>
+	<hr>
+	<div class="buttons">
+		<button onclick='window.location.href="/dashboard"'>Back to dashboard</button><button onclick='window.location.href="/notes/add"'>Create a note</button>
+	</div>
+{{/unless}}
+<style>
+	#note {
+		padding: 20px;
+		border-radius: 5px;
+	}
+	#date {
+		color: #bbb;
+		display: block;
+		font-size: 14px;
+		font-style: italic;
+	}
+	button {
+		margin: 5px;
+	}
+	.buttons {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	#note_body {
+  max-height: 300px;
+  overflow: scroll;
+  background: #0001;
+  border: 1px solid rgb(221, 221, 221);
+  padding: 10px;
+  border-radius: 5px;
+}
+#note {
+  margin: 10px;
+  background: white;
+  box-shadow: 2px 2px 5px #0002, 10px 10px 20px #0001;
+}
+</style>

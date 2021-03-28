@@ -16,7 +16,8 @@ firstName : {
 } ,
 lastName : {
     type : String,
-    required: true
+    required: false,
+		default: () => "Nobody (lastname not defined)"
 },
 image : {
     type : String,

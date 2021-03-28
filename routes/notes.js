@@ -1,9 +1,9 @@
 const express = require('express');
 const { ensureAuth } = require('../middleware/auth');
+const {deburr} = require("bijou.js")
 const router = express.Router();
 const Note = require('../models/Note');
 
-//GET to dashboard
 router.get('/add', ensureAuth, (req, res) => {
   res.render('notes/add');
 });
@@ -11,7 +11,7 @@ router.get('/add', ensureAuth, (req, res) => {
 router.post('/add', ensureAuth, async (req, res) => {
   try {
     req.body.user = req.user._id;
-    console.log(req.body);
+		req.body.isPublic = !!req.body.isPublic
     const note = await Note.create(req.body);
     res.redirect('/notes/view/' + note.id);
   } catch (err) {
@@ -25,13 +25,20 @@ router.get('/view/:id', async (req, res) => {
 		const converter = new showdown.Converter();
 		converter.setFlavor('github');
     let note = await Note.findById(req.params.id).lean();
+		if (!note){
+			res.redirect("/dashboard");
+			return;
+		}
+		if (!note.isPublic || note.user != req.user.id){
+			res.redirect("/dashboard")
+		}
 		note.body = sanitizeHtml(converter.makeHtml(note.body));
-		console.log(note.body)
+		note.body = deburr(note.body);
+		note.title = deburr(note.title);
 		let deleteBtn = false;
 		if (note.user == (req.user ? req.user.id : "Never gonna give you up, never gonna get this ID")){
 			deleteBtn = true;
 		}
-    console.log(note);
     res.render('notes/read', { note, deleteBtn: deleteBtn });
   } catch (err) {
     console.log(err);
@@ -51,23 +58,37 @@ router.get('/edit/:id', ensureAuth, async (req, res) => {
 });
 
 router.put('/:id', ensureAuth, async (req, res) => {
-	const note = await Note.findById(req.params.id).lean();
+	var note = await Note.findById(req.params.id).lean();
 	if (note.user != req.user.id){
 			res.redirect("/dashboard");
 			return;
 	}
   try {
-    console.log(req.body);
+		console.log(`isPublic: ${!!req.body.isPublic}`)
     await Note.findOneAndUpdate(
       { _id: req.params.id },
-      { title: req.body.title, body: req.body.body },
+			{ isPublic: !!req.body.isPublic},
+      { title: deburr(req.body.title), body: deburr(req.body.body), dateCreated: Date.now() },
     );
     res.redirect('/dashboard');
   } catch (er) {
     console.log(er);
   }
 });
-
+router.get("/recent", ensureAuth, async (req, res) => {
+	var notes = await Note.find({isPublic: true}).lean();
+	var showdown  = require('showdown');
+	const sanitizeHtml = require('sanitize-html');
+	const converter = new showdown.Converter();
+	converter.setFlavor('github');
+	notes.map(note => {
+		note.body = sanitizeHtml(converter.makeHtml(note.body));
+		note.body = deburr(note.body);
+		note.title = deburr(note.title);
+		return note;
+	})
+	res.render("public_notes", {notes})
+})
 router.delete('/delete/:id', ensureAuth, async (req, res) => {
 	const note = await Note.findById(req.params.id).lean();
 	if (note.user != req.user.id){

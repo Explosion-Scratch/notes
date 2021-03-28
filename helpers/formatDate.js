@@ -1,5 +1,6 @@
 const moment = require('moment');
+const _$ = require("bijou.js");
 
 module.exports = (date) => {
-  return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+  return _$.capitalize(moment(date).fromNow());
 };

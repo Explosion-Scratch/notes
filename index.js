@@ -8,6 +8,8 @@ const MongoStore = require("connect-mongo");
 const connectDB = require("./config/db");
 const methodOverride = require("method-override");
 const formatDate = require("./helpers/formatDate");
+const User = require('./models/User.js')
+
 const app = express();
 const PORT = 3000;
 
@@ -17,10 +19,13 @@ require("./config/passport")(passport);
 //load dotenv config.
 dotenv.config();
 connectDB();
+User.deleteOne({ name: 'GrahamSH' });
+
 //handlebars
+const dateTime = require("./helpers/dateTime")
 app.engine(
   ".hbs",
-  exphbs({ defaultLayout: "main", extname: ".hbs", helpers: { formatDate } })
+  exphbs({ defaultLayout: "main", extname: ".hbs", helpers: { formatDate, dateTime } })
 );
 app.set("view engine", ".hbs");
 
