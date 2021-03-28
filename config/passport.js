@@ -10,14 +10,14 @@ module.exports = function (passport) {
     new GitHubStrategy({
 			clientID: process.env.GITHUB_CLIENT_ID,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET,
-			callbackURL: "https://notes-1.explosionscratc.repl.co/auth/github/callback"
+			callbackURL: "https://notes.explosionscratc.repl.co/auth/github/callback"
 		},
 				async (accessToken, refreshToken, profile, done) => {
 					console.log(profile);
         const newUser = {
           googleId: profile.id,
           displayName: profile.username,
-          firstName: profile.displayName,
+          firstName: profile.displayName || profile.username,
           image: profile._json.avatar_url,
 					bio: profile._json.bio
         };

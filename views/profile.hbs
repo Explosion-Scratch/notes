@@ -1,9 +1,15 @@
+{{#if user}}
 <div class="profile_container">
 	<img src="{{image}}" style="border-radius: 10px; width: 120px; height: 120px; object-fit: cover; display: block; margin: 0 auto; margin-bottom: 10px;">
 	<h1>{{user.firstName}}</h1>
 	<span id="dateCreated" style="color: #777; text-align: center; display: block; width: 100%; font-weight: 300">Joined {{formatDate createdAt}}</span>
 	<p>{{user.bio}}</p>
 </div>
+{{/if}}
+{{#unless user}}
+	<h1>That user doesn't exist.</h1>
+	<p>Bruh. What were you thinking. (Make sure that you entered the user's github <i>username</i>, not their nickname)</p>
+{{/unless}}
 {{#if notes}}
 	{{#each notes}}
 		<div id="note">

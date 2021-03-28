@@ -10,7 +10,9 @@ router.get('/', ensureGuest, (req, res) => {
 });
 router.get("/users/:id", async (req, res) => {
 	var user = await Users.findOne({displayName: req.params.id}).lean();
-	
+	if (!user) {
+		res.render("profile", {})
+	}
 	let image = user.image
 	var notes = await Note.find({isPublic: true, displayName: req.params.id}).lean();
 	var showdown  = require('showdown');

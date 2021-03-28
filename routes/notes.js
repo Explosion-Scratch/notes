@@ -32,14 +32,14 @@ router.get('/view/:id', async (req, res) => {
 		console.log(req.user, note.user)
 		if (!note.isPublic){
 			console.log("Note isn't public.")
-			if (req.user._id.toString() != note.user.toString()){
+			if ((req.user ? req.user._id : "no id like this").toString() != note.user.toString()){
 				res.render("notes/read", {});
 				return;
 			}
 		}
 		await Note.findOneAndUpdate(
 			{ _id: req.params.id },
-			{views: (note.views || 0) + 1},
+			{views: ((note.views || 0) + 1) || 1},
 		)
 		note.body = sanitizeHtml(converter.makeHtml(note.body));
 		note.body = deburr(note.body);
