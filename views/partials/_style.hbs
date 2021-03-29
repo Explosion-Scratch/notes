@@ -136,6 +136,38 @@ textarea, input[type*=text]{
   width: 100%;
 }
 </style>
+<style media="max-width: 1px">
+	header {
+  box-shadow: 0 3px 4px #fff3;
+  background: #2222;
+}
+header * {
+  color: white;
+}
+header li:hover {
+  border: 1px solid #555;
+}
+.iconify, .iconify *{
+  color: white;
+}
+html {
+  background: #111;
+  color: white;
+}
+* {
+  color: #eee;
+}
+table, table * {
+  border-color: #555;
+}
+tr:nth-child(even){
+  background: #fff1;
+}
+.container a {
+  color: lightblue;
+}
+
+</style>
 <style>
 	/*
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>
@@ -149,7 +181,10 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
   background: #f8f8f8;
   -webkit-text-size-adjust: none;
 }
-
+.dark-mode .hljs {
+	color: #eee;
+	background: #111;
+}
 .hljs-comment,
 .hljs-template_comment,
 .diff .hljs-header,

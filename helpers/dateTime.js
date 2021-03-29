@@ -1,3 +1,3 @@
 module.exports  = (date) => {
-	date.getTime()
+	return date.getTime()
 }

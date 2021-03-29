@@ -1,7 +1,7 @@
 {{#if notes}}
 	{{#each notes}}
 		<div id="note">
-			<h1>{{title}} <span id="date">Created {{formatDate dateCreated}} • <a href="/notes/view/{{_id}}">Link</a></span></h1>
+			<h1><a href="/notes/view/{{_id}}">{{title}}</a> <span id="date">Created {{formatDate dateCreated}} • <a href="/users/{{user}}">{{user}}</a></span></h1>
 			<hr>
 			<div id="note_body">{{{body}}}</div>
 		</div>

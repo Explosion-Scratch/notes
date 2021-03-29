@@ -6,6 +6,6 @@
     <br>
     <textarea name="body" placeholder="Note content" required></textarea>
     <br>
-    <input type="submit" value="Save">
+    <input type="submit" value="Save" onclick="this.parentElement.submit(); this.disabled = true; this.style.opacity = .5; this.style.cursor = 'not-allowed'">
     </form>
 </div>

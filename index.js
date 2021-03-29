@@ -8,9 +8,8 @@ const MongoStore = require("connect-mongo");
 const connectDB = require("./config/db");
 const methodOverride = require("method-override");
 const formatDate = require("./helpers/formatDate");
-const User = require('./models/User.js')
-
 const app = express();
+const User = require('./models/User.js')
 const PORT = 3000;
 
 //passport config
@@ -32,6 +31,7 @@ app.set("view engine", ".hbs");
 //bodyparser
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(methodOverride());
 app.use(
   methodOverride((req, res) => {
     if (req.body && typeof req.body === "object" && "_method" in req.body) {
@@ -62,5 +62,8 @@ app.use(passport.session());
 app.use("/", require("./routes/index"));
 app.use("/auth", require("./routes/auth"));
 app.use("/notes", require("./routes/notes"));
-
+app.use(function (err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).redirect('/')
+})
 app.listen(PORT, console.log("LIstening at port 3000"));

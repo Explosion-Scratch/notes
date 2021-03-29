@@ -15,21 +15,30 @@ router.get("/users/:id", async (req, res) => {
 		return;
 	}
 	let image = user ? user.image : "";
-	var notes = await Note.find({isPublic: true, displayName: req.params.id}).lean();
+	var notes = await Note.find({isPublic: true, user: user._id}).lean();
+	notes.reverse();
 	var showdown  = require('showdown');
 	const sanitizeHtml = require('sanitize-html');
 	const converter = new showdown.Converter();
 	converter.setFlavor('github');
 	notes.map(note => {
+		const {deburr} = require("bijou.js")
 		note.body = sanitizeHtml(converter.makeHtml(note.body));
 		note.body = deburr(note.body);
 		note.title = deburr(note.title);
 		return note;
 	})
-	res.render("profile", {user, notes, image})
+	let isMe = (req.user ? req.user._id : "nothing lmao").toString() == user._id.toString();
+	res.render("profile", {user, notes, image, isMe})
+})
+router.put("/users/update/bio/:id", ensureAuth, async (req, res) => {
+	if ((req.user ? req.user._id : "This is a placeholder id =P").toString() == req.params.id.toString()){
+		const {deburr} = require("bijou.js")
+		console.log(req.body.bio, await Users.findOneAndUpdate({_id: req.params.id}, {bio: deburr(req.body.bio)}))
+		res.redirect("/users/" + (await Users.findOne({_id: req.params.id})).displayName)
+	}
 })
 router.get('/dashboard', ensureAuth, async (req, res) => {
-	console.log(req.user)
   try {
     var notes = await Note.find({ user: req.user.id }).lean();
 		notes = notes.reverse();

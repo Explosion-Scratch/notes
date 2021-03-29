@@ -1,8 +1,11 @@
 {{#if note}}
 	<h1>{{note.title}}</h1>
-	<div id="stats"><span id="date"><span class="iconify"
-							data-icon="ic:baseline-update" data-inline="false"></span>
-					{{ formatDate note.dateCreated }} </span><span id="views"><span class="iconify" data-icon="fe:eye"></span> {{note.views}}</span> <span id="readingTime"><span class="iconify" data-icon="bx:bx-time"></span>Reading time: {{readTime}}</span></div>
+	<div id="stats">
+			<span id="date"><span class="iconify" data-icon="ic:baseline-update" data-inline="false"></span>{{ formatDate note.dateCreated }}</span>
+			<span id="views"><span class="iconify" data-icon="fe:eye"></span> {{note.views}}</span> 
+			<span id="readingTime"><span class="iconify" data-icon="bx:bx-time"></span>Reading time: {{readTime}}</span>
+			<span id="user"><a href="/users/{{user}}"><span class="iconify" data-icon="carbon:user-filled"></span>{{user}}</a></span>
+	</div>
 	<style>
 			.iconify,
 			.iconify * {
@@ -38,6 +41,12 @@
 					<i>Huh. No content.</i>
 			{{/unless}}
 	</main>
+	<style>
+	main {
+		background: white;
+		box-shadow: 5px 10px 30px #0001, 0 0 4px #0001;
+	}
+	</style>
 	<script>
 			async function reportNote() {
 					let data = {

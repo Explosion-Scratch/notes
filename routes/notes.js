@@ -3,7 +3,7 @@ const { ensureAuth } = require('../middleware/auth');
 const {deburr} = require("bijou.js")
 const router = express.Router();
 const Note = require('../models/Note');
-
+const User = require("../models/User")
 router.get('/add', ensureAuth, (req, res) => {
   res.render('notes/add');
 });
@@ -29,9 +29,7 @@ router.get('/view/:id', async (req, res) => {
 			res.redirect("/dashboard");
 			return;
 		}
-		console.log(req.user, note.user)
 		if (!note.isPublic){
-			console.log("Note isn't public.")
 			if ((req.user ? req.user._id : "no id like this").toString() != note.user.toString()){
 				res.render("notes/read", {});
 				return;
@@ -48,7 +46,7 @@ router.get('/view/:id', async (req, res) => {
 		if (note.user == (req.user ? req.user.id : "Never gonna give you up, never gonna get this ID")){
 			deleteBtn = true;
 		}
-    res.render('notes/read', { note, deleteBtn: deleteBtn, readTime: readingTime(note.body) });
+    res.render('notes/read', { note, deleteBtn: deleteBtn, readTime: readingTime(note.body), user: await getUser(note) });
   } catch (err) {
     console.log(err);
   }
@@ -69,20 +67,18 @@ router.get('/edit/:id', ensureAuth, async (req, res) => {
     console.log(err);
   }
 });
-router.put('/:id', ensureAuth, async (req, res) => {
+router.put('/update/:id', ensureAuth, async (req, res) => {
 	var note = await Note.findById(req.params.id).lean();
 	if (note.user != req.user.id){
-			res.redirect("/dashboard");
+			res.status(403).redirect("/notes/view/" + req.params.id);
 			return;
 	}
   try {
-		console.log(`isPublic: ${!!req.body.isPublic}`)
     await Note.findOneAndUpdate(
       { _id: req.params.id },
-			{ isPublic: !!req.body.isPublic},
-      { title: deburr(req.body.title), body: deburr(req.body.body), dateCreated: Date.now() },
+			{ isPublic: !!req.body.isPublic, title: deburr(req.body.title), body: deburr(req.body.body), dateCreated: Date.now()},
     );
-    res.redirect('/dashboard');
+		res.redirect("/notes/view/" + req.params.id);
   } catch (er) {
     console.log(er);
   }
@@ -93,12 +89,15 @@ router.get("/recent", ensureAuth, async (req, res) => {
 	const sanitizeHtml = require('sanitize-html');
 	const converter = new showdown.Converter();
 	converter.setFlavor('github');
-	notes.map(note => {
+	notes = notes.map(async (note) => {
 		note.body = sanitizeHtml(converter.makeHtml(note.body));
 		note.body = deburr(note.body);
 		note.title = deburr(note.title);
+		note.user = await getUser(note);
 		return note;
 	})
+	notes = await Promise.all(notes);
+	notes.reverse()
 	res.render("public_notes", {notes})
 })
 router.delete('/delete/:id', ensureAuth, async (req, res) => {
@@ -116,5 +115,8 @@ router.delete('/delete/:id', ensureAuth, async (req, res) => {
 });
 function type(e) {
 	return Object.prototype.toString.call(e).split(" ")[1].replace(/]$/, "");
+}
+async function getUser(note){
+	return (await User.findOne({_id: note.user})).displayName;
 }
 module.exports = router;

@@ -1,4 +1,4 @@
-<form action="/notes/{{note._id}}" method="POST">
+<form action="/notes/update/{{note._id}}" method="POST">
 		<h2>Edit note</h2>
     <input type="hidden" name="_method" value="PUT">
 		{{#if note.isPublic}}

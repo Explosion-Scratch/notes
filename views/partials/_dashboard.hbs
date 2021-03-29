@@ -6,12 +6,14 @@
         <tr>
             <th>Title</th>
             <th>Last edited</th>
-            <th></th>
+						<th>Views</th>
+            <th>Options</th>
         </tr>
     {{#each notes}}
         <tr>
             <td><a href="notes/view/{{_id}}">{{title}}</a></td>
             <td data-date="{{dateTime dateCreated}}">{{formatDate dateCreated}} </td>
+						<td>{{views}}</td>
             <td>
                 <button onclick='window.location.href="/notes/edit/{{_id}}"'><span class="iconify" data-icon="clarity:edit-solid"></span> Edit</button>
                 <form onsubmit="return confirm('Are you sure you want to delete this note?')"action="/notes/delete/{{_id}}" method="POST" >

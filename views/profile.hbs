@@ -3,7 +3,16 @@
 	<img src="{{image}}" style="border-radius: 10px; width: 120px; height: 120px; object-fit: cover; display: block; margin: 0 auto; margin-bottom: 10px;">
 	<h1>{{user.firstName}}</h1>
 	<span id="dateCreated" style="color: #777; text-align: center; display: block; width: 100%; font-weight: 300">Joined {{formatDate createdAt}}</span>
-	<p>{{user.bio}}</p>
+	{{#if isMe}}
+		<form action="/users/update/bio/{{user._id}}" method="POST" style="margin-bottom: 10px;">
+		  <input type="hidden" name="_method" value="PUT">
+			<textarea placeholder="Enter your bio here!" name="bio" required>{{user.bio}}</textarea>
+			<button type="submit">Save</button>
+		</form>
+	{{/if}}
+	{{#unless isMe}}
+		<p>{{user.bio}}</p>
+	{{/unless}}
 </div>
 {{/if}}
 {{#unless user}}
@@ -11,11 +20,79 @@
 	<p>Bruh. What were you thinking. (Make sure that you entered the user's github <i>username</i>, not their nickname)</p>
 {{/unless}}
 {{#if notes}}
-	{{#each notes}}
-		<div id="note">
-			<h1>{{title}} <span id="date">Created {{formatDate dateCreated}} • <a href="/notes/view/{{_id}}">Link</a></span></h1>
-			<hr>
-			<div id="note_body">{{{body}}}</div>
-		</div>
-	{{/each}}
+	<div class="section">
+		<h1>{{user.firstName}}'s public notes</h1>
+		{{#each notes}}
+			<div id="note">
+				<hr>
+				<h3>{{title}} <span id="date">Created {{formatDate dateCreated}} • <a href="/notes/view/{{_id}}">Link</a></span></h3>
+				<hr>
+				<div id="note_body">{{{body}}}</div>
+			</div>
+		{{/each}}
+	</div>
 {{/if}}
+{{#unless notes}}
+	<div class="section">
+		<i>{{user.firstname}} does not have any public notes</i>
+	</div>
+{{/unless}}
+<style>
+	#note {
+  max-height: 300px;
+  overflow-y: scroll;
+  padding: 30px;
+}
+	.section {
+  padding: 30px;
+  background: #0001;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  flex-direction: column;
+}
+.section > h1 {
+  margin-bottom: 20px;
+}
+.section::before, .section::after {
+  content: "";
+  display: block;
+  width: 300px;
+  height: 300px;
+  background: lightseagreen;
+  border-radius: 100%;
+  transform: translate(-50%, -50%);
+  top: 0%;
+  left: 0%;
+  position: absolute;
+  filter: blur(6px);
+  z-index: -1000;
+}
+.section::after {
+  background-color: lightblue;
+  top: 100%;
+  left: 100%;
+}
+#note #date{
+  display: block;
+  font-size: 14px;
+  color: #777;
+  font-weight: 300;;
+}
+#note {
+  border: 1px solid #ddd;
+  background: #fff2;
+  padding: 20px;
+  width: 90%;
+  margin-top: 6px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 4px #0001;
+}
+textarea {
+  min-height: 100px !important;
+  height: 100px;
+}
+</style>
